@@ -1,0 +1,203 @@
+Charles HW Traffic capture
+
+Ex_0: Сфокусироваться на ниже перечисленных запросах
+
+Protocol: http
+IP: 162.55.220.72
+Port: 5005
+
+Ex_1: 
+Method: GET
+EndPoint: /get_method
+request url params: 
+ name: str
+ age: int
+
+response: 
+[
+    “Str”,
+    “Str”
+]
+
+Task:
+Сделать и в Rewrite, и в BreakPoint (можно отключить чтобы не стопило на каждом запросе)
+ ⁃ Подменить url в Charles чтобы в запросе ушло имя которые вы вписали в Postman, а вернулось то, которое вы подставили в Charles.
+
+1. Отправляем запрос в Postman http://162.55.220.72:5005/get_method?name=inna&age=30
+2. Получаем следующий респонс:
+[
+    "inna",
+    "30"
+]
+
+3. Заходим в Charles, отправляем запрос в Rewrite
+-Tools- Rewrite- Enable rewrite+, add (даем название этому перехвату EP_0)
+-Location add (вводим URL)
+-Type, Actoin add: 
+Type- Modify Query Param
+Match- Name-Inna
+Replace- Name-NINA
+OK
+
+4. Повторно отправляем реквест в Постмане, в респонсе видим, что имя inna подменено на NINA
+
+5. Заходим в Charles, отправляем запрос в BreakPoint.
+Proxy- BreakPoint Setting- Enable+,Add
+Вставляем URL, заменяем имя inna на Anna
+
+
+==================
+
+Ex_2:
+Method: POST
+EndPoint: /user_info_3
+request form data: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'name': name,
+          'age': age,
+          'salary': salary,
+          'family': {'children': [['Alex', 24], ['Kate', 12]],
+                     'u_salary_1_5_year': salary * 4}}
+
+Task:
+Сделать и в Rewrite, и в BreakPoint (можно отключить чтобы не стопило на каждом запросе)
+ ⁃ Подменить body в Charles так чтобы в запросе ушла salary которую вы вписали в Postman, 
+а в u_salary_1_5_year цифра вернулась меньше оригинальной из запроса.
+
+1.В Постмане отправляем реквест http://162.55.220.72:5005/user_info_3
+2.В Rewrite выбираем Body, Response. Match- 400000, Replace- 20000
+3.Заходим в Постман, повторно отправляем запрос. Респонс приходит с подмененным ответом (20000 вместо 400000)
+4.В BreakPoint- Add- Edit Response- Execute.
+5.Заходим в Постман, повторно отправляем запрос. Респонс приходит с подмененным ответом (10000 вместо 100000)
+
+
+
+==================
+
+Ex_3:
+Method: GET
+EndPoint: /object_info_1
+request url params: 
+ name: str
+ age: int
+ weight: int
+
+response: 
+{'name': name,
+          'age': age,
+          'daily_food': weight * 0.012,
+          'daily_sleep': weight * 2.5}
+
+Task:
+Сделать и в Rewrite, и в BreakPoint (можно отключить чтобы не стопило на каждом запросе)
+ ⁃ Подменить параметры запроса в Charles так, чтобы в Postman пришел ответ где другое name, 
+daily_food > weight из запроса, а daily_sleep < weight из запроса.
+
+1. Отправляем запрос в Постмане http://162.55.220.72:5005/object_info_1?name=inna&age=30&weight=50
+2. В Rewrite выбираем Modify Quary Param, подменяем респонс имя inna заменяем Mikki
+3. Создаем еще один респонс, Modify Quary Param, подменяем на это раз реквест. Меняем weight из реквеста на 60
+4. Заходим в Постман, повторно отправляем запрос. Респонс приходит с подмененным ответом
+5. В BreakPoint- Add- Edit Response (изменяем параметры на нужные нам)- Execute.
+6. Заходим в Постман, повторно отправляем запрос. Респонс приходит с подмененным ответом
+
+
+==================
+
+Ex_4:
+Method: GET
+EndPoint: /object_info_3
+request url params: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'name': name,
+          'age': age,
+          'salary': salary,
+          'family': {'children': [['Alex', 24], ['Kate', 12]],
+                     'pets': {'cat':{'name':'Sunny',
+                                     'age': 3},
+                              'dog':{'name':'Luky',
+                                     'age': 4}},
+                     'u_salary_1_5_year': salary * 4}
+          }
+
+Task:
+Сделать и в Rewrite, и в BreakPoint (можно отключить чтобы не стопило на каждом запросе)
+- Сделать через Charles так, чтобы сервер вернул 500 код.
+- Сделать через Charles так, чтобы сервер вернул 405 код.
+
+1.Отправляем запрос в Постмане http://162.55.220.72:5005/object_info_3?name=inna&age=30&salary=100000
+2.Заходим в Charles, Rewrite, Add, Response Status заменяем значение 200 ОК на 500 ERROR. Проделываем тоже самое, но заменяем 200 ОК на 405 Method Not Allowed
+3.Заменяем статус-код через Breakpoint. Proxy-Breakpoint setting-вводим параметры, выбираем респонс, Edit Response, изменяем статус код с 200 ОК на 500 ERROR, Execute.
+Проделываем тоже самое второй раз, изменяем 200 OK на 405 Method Not Allowed
+
+==================
+
+Ex_5:
+Method: GET
+EndPoint: /object_info_4
+request url params: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'name': name,
+          'age': int(age),
+          'salary': [salary, str(salary * 2), str(salary * 3)]}
+
+
+Task:
+Сделать и в Rewrite, и в BreakPoint (можно отключить чтобы не стопило на каждом запросе)
+ ⁃ Сделать через Charles так, чтобы сервер вернул 405 ошибку.
+ ⁃ Подменить salary в request
+ ⁃ Подменить (salary * 2) в response
+
+1.Отправляем реквест в Постмане http://162.55.220.72:5005/object_info_4?name=inna&age=30&salary=100000
+2.Заходим в Charles, Rewrite, Add, Response Status заменяем значение 200 ОК на 405 Method Not Allowed,
+В Rewrite , Add, выбираем Modify Quary Param, salary 100000 подменяем на 5000,
+В Rewrite , Add, выбираем Body, Response, 10000 подменяем на 500
+3.В BreakPoint- Add- (чекбоксы респонс и реквест) в Edit Response, Edit Request заменяем параметры salary, salary*2, и статус-код. Execute 
+
+
+
+==================
+
+Ex_6:
+Method: POST
+EndPoint: /user_info_2
+request form data: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'start_qa_salary': salary,
+          'qa_salary_after_6_months': salary * 2,
+          'qa_salary_after_12_months': salary * 2.7,
+          'qa_salary_after_1.5_year': salary * 3.3,
+          'qa_salary_after_3.5_years': salary * 3.8,
+          'person': {'u_name': [user_name, salary, age],
+                     'u_age': age,
+                     'u_salary_5_years': salary * 4.2}
+          }
+
+
+Task:
+Сделать и в Rewrite, и в BreakPoint (можно отключить чтобы не стопило на каждом запросе)
+ ⁃ Сделать через Charles так, чтобы в Postman вернулся ответ, в котором qa_salary_after_1.5_year 
+переименовано в qa_salary_after_1.5_month
+ ⁃ Сделать так чтобы qa_salary_after_3.5_years было меньше qa_salary_after_12_months в response
+
+1. Отправляем запрос в Постмане, Метод Post, http://162.55.220.72:5005/user_info_2
+
+2. Заходим в Charles, Proxy- BreakPoint, заполняем параметры, перезапускаем запрос в Постмане, 
+Исправляем в Чарльзе Edit Response- заменяем нужные нам параметры, Execute.
+
+Все настройки Charles выгрузить в GitHub
