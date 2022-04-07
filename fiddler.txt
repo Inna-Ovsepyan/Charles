@@ -1,0 +1,250 @@
+Fiddler HomeWork
+
+Ex_0: Отфильтровать выдачу запросов по нужному ip
+
+Protocol: http
+IP: 162.55.220.72
+Port: 5005
+
+1. Отправляем GET запрос в Постмане http://162.55.220.72:5005
+2. Заходим в Fiddler, в фильтре выставляем параметр 162.55.220.72
+
+============================================================================
+  
+
+Ex_1: 
+Method: GET
+EndPoint: /get_method
+request url params: 
+ name: str
+ age: int
+
+response: 
+[
+    “Str”,
+    “Str”
+]
+
+Task:
+Сделать правила:
+ ⁃ Подменить url в чтобы в запросе поменялся name которые вы вписали в Postman.
+ - Подменить url в чтобы в запросе поменялся age которые вы вписали в Postman. 
+
+1. Отправляем в Постмане GET запрос http://162.55.220.72:5005/get_method?name=inna&age=30
+2. Заходим в Fiddler-Rules->Add new Rules-> name- EP_1->
+Url 162.55.220.72:5005->
+Actions- Update Url, Find and replace
+Прописываем URL, подменяем имя c inna на FOMA
+Url http://162.55.220.72:5005/get_method?name=FOMA&age=30
+Save, Execute
+
+
+
+==================
+
+Ex_2:
+Method: POST
+EndPoint: /user_info_3
+request form data: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'name': name,
+          'age': age,
+          'salary': salary,
+          'family': {'children': [['Alex', 24], ['Kate', 12]],
+                     'u_salary_1_5_year': salary * 4}}
+
+Task:
+Сделать правила:
+ ⁃ Подменить тело запроса чтобы поменялся name которые вы вписали в Postman.
+ - Подменить тело запроса чтобы поменялся age которые вы вписали в Postman. 
+ - Подменить тело запроса чтобы поменялся salary которые вы вписали в Postman. 
+ - Подменить тело запроса чтобы удалился age которые вы вписали в Postman.  (Получить 500 код)
+ - В ответе поменять children на neighbors. 
+ - В ответе поменять значение зарплаты u_salary_1_5_year на другую цифру. 
+ - В ответе удалить параметр salary. 
+
+1. Отправляем запрос в Постмане. POST, Body- form-data
+2. Заходим в Fiddler, add new rule
+3. Создаем новое правило с параметрами: Update Request Body, Find and replace, меняем значение name inna на FOMA
+4. Заходим в ранее созданное правило и дополняем его +Add action: Update Request Body, Find and replace, меняем значение age 30 на 20
+5. Заходим в ранее созданное правило и дополняем его +Add action: Update Request Body, Find and replace,меняем salary с 5000 на 2000
+6. Создаем новое правило +Add new rule. Update Request Body, Set value, age. Получаем 500 статус-код.
+7. Создаем новое правило +Add new rule. Update Respons Body, Find and replace, меняем children на neighborsю
+8. Заходим в ранее созданное правило и дополняем его +Add action. Update Respons Body, Find and replace, меняем значение u_salary_1_5_year с 20000 на 5000
+9. Создаем новое правило +Add new rule. Update Respons Body, Set value. В значение вставляем весь запрос без параметра salary,
+{"age":"30","family":{"children":[["Alex",24],["Kate",12]],"u_salary_1_5_year":20000},"name":"inna"}
+
+
+
+==================
+
+Ex_3:
+Method: GET
+EndPoint: /object_info_1
+request url params: 
+ name: str
+ age: int
+ weight: int
+
+response: 
+{'name': name,
+          'age': age,
+          'daily_food': weight * 0.012,
+          'daily_sleep': weight * 2.5}
+
+Task:
+Сделать правила:
+ ⁃ Подменить url в чтобы в запросе поменялся name которые вы вписали в Postman.
+ - Подменить url в чтобы в запросе поменялся age которые вы вписали в Postman. 
+ - Подменить url в чтобы в запросе поменялся salary которые вы вписали в Postman. 
+ - Подменить url в чтобы в запросе удалился weight которые вы вписали в Postman.
+ - В ответе удалить параметр  daily_food.
+ - В ответе поменять значение параметра daily_food на другую цифру. 
+ - В ответе переименовать daily_sleep на sleep
+ - В ответе поменять значение параметра daily_sleep на другую цифру. 
+
+1. В Постмане отправляем GET запрос. http://162.55.220.72:5005/object_info_1?name=inna&age=30&weight=50
+2. В Fiddlere создаем новое правило с несколькими действиями:
+Updete Query Params, Find and replace, name inna- FOMA
+Updete Query Params, Find and replace, age 30- 20
+Updete Query Params, Find and replace, weight 50- 61
+3. Создаем новое правило. Update response body, Set value, {"age":30,"daily_sleep":125.0,"name":"inna"} (заранее удалив "daily_food":0.6,)
+4. Создаем новое правило с несколькими действиями:
+Update response body, Find and replace, 125 - 500
+Update response body, Find and replace, daily_food - callories 
+Update response body, Find and replace, 0.6-  2000
+
+==================
+
+Ex_4:
+Method: GET
+EndPoint: /object_info_3
+request url params: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'name': name,
+          'age': age,
+          'salary': salary,
+          'family': {'children': [['Alex', 24], ['Kate', 12]],
+                     'pets': {'cat':{'name':'Sunny',
+                                     'age': 3},
+                              'dog':{'name':'Luky',
+                                     'age': 4}},
+                     'u_salary_1_5_year': salary * 4}
+          }
+
+Task:
+Сделать правила:
+ ⁃ Подменить url в чтобы в запросе поменялся name которые вы вписали в Postman.
+ - Подменить url в чтобы в запросе поменялся age которые вы вписали в Postman. 
+ - Подменить url в чтобы в запросе удалился name которые вы вписали в Postman.
+ - В ответе удалить параметр  salary.
+ - В ответе поменять значение параметра cat на другой json. 
+ - Получить 405 код
+
+1. Отправляем запрос в Постмане http://162.55.220.72:5005//object_info_3?name=inna&age=30&salary=5000
+2. Переходим в Fiddler. Создаем новое правило с двумя действиями:
+Update Url, Find and replace, inna-> FOMA
+Update Url, Find and replace, 30->25
+3. Удаляем значение name Update query params, Set value, name
+4. Удалить в ответе параметр salary- Update Response body, sey value, удаляем "salary":5000 из респонса {"age":"30","family":{"children":[["Alex",24],["Kate",12]],"pets":{"cat":{"age":3,"name":"Sunny"},"dog":{"age":4,"name":"Luky"}},"u_salary_1_5_year":20000},"name":"inna"}
+5. Создаем новое правило. Manual Response- {"age":"30","family":{"children":[["Alex",24],["Kate",12]],"pets":{"cat":{"age":3,"name":"Sunny"},"dog":{"age":4,"name":"Luky"}},"u_salary_1_5_year":20000},"name":"inna","salary":5000}
+заменяем параметры cat на "cat":{"color":"black","breed":"siberian"}
+6. В теле этого же правила меняем статус-код 200 на 405.
+==================
+
+Ex_5:
+Method: GET
+EndPoint: /object_info_4
+request url params: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'name': name,
+          'age': int(age),
+          'salary': [salary, str(salary * 2), str(salary * 3)]}
+
+
+Task:
+ ⁃ Подменить url в чтобы в запросе поменялся name которые вы вписали в Postman.
+ - Подменить url в чтобы в запросе поменялся age которые вы вписали в Postman. 
+ - Подменить url в чтобы в запросе удалился salary которые вы вписали в Postman.
+ - В ответе удалить параметр  salary.
+ - В ответе поменять значение параметра salary на значение текстового типа. 
+ - Получить 405 код
+
+1. Отправляем запрос в Постмане http://162.55.220.72:5005/object_info_4?name=inna&age=30&salary=5000
+2. Создаем правило с двумя действиями:
+Update url, set value, inna-> FOMA
+Update url, set value, 30->28
+3. Удаляем вписанное значение salary в Постмане. Создаем новое правило, Update query params, set value, salary- 0
+4. Создаем новое правило. Update response body, find and replace, Меняем значение salary 5000 на текстовое "2000"
+Тут же добавляем действие и меняем статус- код 200 на 405.
+==================
+
+
+Ex_6:
+Method: POST
+EndPoint: /user_info_2
+request form data: 
+ name: str
+ age: int
+ salary: int
+
+response: 
+{'start_qa_salary': salary,
+          'qa_salary_after_6_months': salary * 2,
+          'qa_salary_after_12_months': salary * 2.7,
+          'qa_salary_after_1.5_year': salary * 3.3,
+          'qa_salary_after_3.5_years': salary * 3.8,
+          'person': {'u_name': [user_name, salary, age],
+                     'u_age': age,
+                     'u_salary_5_years': salary * 4.2}
+          }
+
+
+Task:
+Сделать правила:
+ - Подменить тело запроса чтобы поменялся age которые вы вписали в Postman. 
+ - Подменить тело запроса чтобы поменялся salary которые вы вписали в Postman. 
+ - Подменить тело запроса чтобы удалился salary которые вы вписали в Postman.
+ - В ответе поменять qa_salary_after_6_months на qa_salary_after_10_months. 
+ - В ответе поменять значение зарплаты qa_salary_after_1.5_year на другую цифру. 
+ - В ответе удалить параметр person. 
+ - В ответе поменять значение параметр person с json на xml. 
+
+1. Отправляем запрос в Постмане http://162.55.220.72:5005//user_info_2, вносим все параметры
+2. Создаем новое правило в Fiddler. Update response body, find and replace, 30->25, 5000-> 6000
+3. Удаляем salary- создаем новое правило, Update request body, set value, salary без значения. Вылетает 500 ошибка.
+4. Создаем новое правило с двумя действиями, Update response body, find and replace,qa_salary_after_6_months ->qa_salary_after_10_months
+Update response body, find and replace,16500-> 20000
+5. Создаем новое правило. Update response body, set value, вставляем без значения person
+{"u_salary_5_years":21000.0},"qa_salary_after_1.5_year":16500.0,"qa_salary_after_12_months":13500.0,"qa_salary_after_3.5_years":19000.0,"qa_salary_after_6_months":10000,"start_qa_salary":5000}
+6. Создаем новое правило, Manual Response, вставляем схему ответа в json и заменяем person на xml.
+
+{   
+    <person> {
+        <u_age>30</u_age>
+        <u_name>inna</u_name>
+        <u_name>5000</u_name>    
+        <u_name>30</u_name>
+        <u_salary_5_years>21000.0</u_salary_5_years>
+    </person>,
+    "qa_salary_after_1.5_year": 16500.0,
+    "qa_salary_after_12_months": 13500.0,
+    "qa_salary_after_3.5_years": 19000.0,
+    "qa_salary_after_6_months": 10000,
+    "start_qa_salary": 5000
+}
+
+
+Все настройки правил Fiddler выгрузить в GitHub
